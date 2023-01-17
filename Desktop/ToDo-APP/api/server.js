@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -7,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect("mongodb://127.0.0.1:27017/mern-todo", {
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -17,8 +18,8 @@ mongoose.connect("mongodb://127.0.0.1:27017/mern-todo", {
     const Todo = require('./models/Todo');
 const { json } = require('express');
 
-    app.get('todos', async (req, res) => {
-        const todos = await Todo.find();
+    app.get('/todos', async (req, res) => {
+        const todos = await Todo.find({});
 
         res.json(todos);
     });
@@ -34,9 +35,9 @@ const { json } = require('express');
     });
 
     app.delete('/todo/delete/:id', async (req, res) => {
-        const result = await Todo.findByIdAndDelete(res.params.id);
+        const result = await Todo.findByIdAndDelete(req.params.id);
 
-        res,json(result);
+        res.json(result);
 
     });
 
